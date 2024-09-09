@@ -158,9 +158,9 @@ int main(int argc, char** argv) {
             printf("Invalid result at index %d, actual: %f, expected: %f. \n", i, actual, expected);
             exit(3);
         }
-        else {
-            printf("Valid result at index %d, actual: %f, expected: %f. \n", i, actual, expected);
-        }
+        // else {
+        //     printf("Valid result at index %d, actual: %f, expected: %f. \n", i, actual, expected);
+        // }
     }
     printf("Successful Validation.\n");
 
