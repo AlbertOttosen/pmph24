@@ -23,7 +23,7 @@
 --    []i32
 -- }
 -- output {
---    1i32
+--    0i32
 -- }
 
 import "lssp"
