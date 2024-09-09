@@ -1,7 +1,7 @@
 -- Parallel Longest Satisfying Segment
 --
 -- ==
--- compiled input {
+-- input {
 --    [1i32, -2i32, -2i32, 0i32, 0i32, 0i32, 0i32, 0i32, 3i32, 4i32, -6i32, 1i32]
 --    [1i32, -2i32, -2i32, 0i32, 0i32, 0i32, 0i32, 3i32, 4i32, -6i32, 1i32]
 -- }
