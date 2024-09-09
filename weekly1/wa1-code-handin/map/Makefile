@@ -4,7 +4,7 @@ CXX        = nvcc -O3
 SRC = wa1-task3.cu
 EXECUTABLE = wa1-task3
 
-default: compile run
+default: compile
 
 .cu.o: $(SRC)
 	$(CXX) -c $@ $<
