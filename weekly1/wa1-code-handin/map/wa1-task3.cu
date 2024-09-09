@@ -20,23 +20,23 @@ __global__ void myKernel(float* X, float *Y, int N) {
 }
 
 int main(int argc, char** argv) {
-    unsigned int N;
+    unsigned int N = 753411;
     
-    { // reading the number of elements 
-      if (argc != 2) { 
-        printf("Num Args is: %d instead of 1. Exiting!\n", argc); 
-        exit(1);
-      }
+    // { // reading the number of elements 
+    //   if (argc != 2) { 
+    //     printf("Num Args is: %d instead of 1. Exiting!\n", argc); 
+    //     exit(1);
+    //   }
 
-      N = atoi(argv[1]);
-      printf("N is: %d\n", N);
+    //   N = atoi(argv[1]);
+    //   printf("N is: %d\n", N);
 
-      const unsigned int maxN = 500000000;
-      if(N > maxN) {
-          printf("N is too big; maximal value is %d. Exiting!\n", maxN);
-          exit(2);
-      }
-    }
+    //   const unsigned int maxN = 500000000;
+    //   if(N > maxN) {
+    //       printf("N is too big; maximal value is %d. Exiting!\n", maxN);
+    //       exit(2);
+    //   }
+    // }
 
     // use the first CUDA device:
     cudaSetDevice(0);
