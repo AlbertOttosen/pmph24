@@ -6,7 +6,7 @@
 
 #include "helper.h"
 
-#define GPU_RUNS 300
+#define GPU_RUNS 30
 
 __global__ void myKernel(float* X, float *Y, int N) {
     // Calculate global thread index
@@ -16,6 +16,13 @@ __global__ void myKernel(float* X, float *Y, int N) {
     if (gid < N) {
         double temp = X[gid] / (X[gid] - 2.3);
         Y[gid] = temp * temp * temp; // Efficient cube calculation
+    }
+}
+
+void sequential(float* X, float* Y, int N) {
+    for (int i = 0; i < N; ++i) {
+        double temp = X[i] / (X[i] - 2.3);
+        Y[i] = temp * temp * temp;
     }
 }
 
@@ -46,6 +53,9 @@ int main(int argc, char** argv) {
     // allocate host memory
     float* h_in  = (float*) malloc(mem_size);
     float* h_out = (float*) malloc(mem_size);
+
+    // allocate memory for sequential result
+    float* seq_out = (float*) malloc(mem_size);
 
     // initialize the memory
     for(unsigned int i=0; i<N; ++i) {
@@ -110,12 +120,27 @@ int main(int argc, char** argv) {
     // copy result from ddevice to host
     cudaMemcpy(h_out, d_out, mem_size, cudaMemcpyDeviceToHost);
 
+    {
+        double elapsed; struct timeval t_start, t_end, t_diff;
+        gettimeofday(&t_start, NULL);
+
+        for(int r = 0; r < GPU_RUNS; r++) {
+            sequential(h_in, seq_out, N)
+        }
+        
+        gettimeofday(&t_end, NULL);
+        timeval_subtract(&t_diff, &t_end, &t_start);
+        elapsed = (1.0 * (t_diff.tv_sec*1e6+t_diff.tv_usec)) / GPU_RUNS;
+        double gigabytespersec = (2.0 * N * 4.0) / (elapsed * 1000.0);
+        printf("The cpu took on average %f microseconds. GB/sec: %f \n", elapsed, gigabytespersec);
+    }
+
     // print result
     //for(unsigned int i=0; i<N; ++i) printf("%.6f\n", h_out[i]);
 
     for(unsigned int i=0; i<N; ++i) {
         float actual   = h_out[i];
-        float expected = 2 * h_in[i]; 
+        float expected = seq_out[i]; 
         if( actual != expected ) {
             printf("Invalid result at index %d, actual: %f, expected: %f. \n", i, actual, expected);
             exit(3);
