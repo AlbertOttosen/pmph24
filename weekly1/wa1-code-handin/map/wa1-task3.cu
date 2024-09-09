@@ -43,11 +43,11 @@ int main(int argc, char** argv) {
 
         printf("N is: %d\n", N);
 
-        const unsigned int maxN = 500000000;
-        if(N > maxN) {
-            printf("N is too big; maximal value is %d. Exiting!\n", maxN);
-            exit(2);
-        }
+        // const unsigned int maxN = 500000000;
+        // if(N > maxN) {
+        //     printf("N is too big; maximal value is %d. Exiting!\n", maxN);
+        //     exit(2);
+        // }
     }
 
     // use the first CUDA device:
