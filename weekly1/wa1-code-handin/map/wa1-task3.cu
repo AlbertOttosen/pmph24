@@ -57,6 +57,15 @@ int main(int argc, char** argv) {
 
     // allocate host memory
     float* h_in  = (float*) malloc(mem_size);
+
+    // Set a fixed seed for reproducibility
+    srand(42);
+
+    // Fill the array with random float values between 1 and 10
+    for (unsigned int i = 0; i < N; ++i) {
+        h_in[i] = 1.0f + (float)rand() / (float)(RAND_MAX / 9.0f);  // Scale to range [1, 10]
+    }
+
     float* h_out = (float*) malloc(mem_size);
 
     // allocate memory for sequential result
