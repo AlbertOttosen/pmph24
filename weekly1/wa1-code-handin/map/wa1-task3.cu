@@ -6,7 +6,7 @@
 
 #include "helper.h"
 
-#define GPU_RUNS 30
+#define GPU_RUNS 300
 
 __global__ void myKernel(float* X, float *Y, int N) {
     // Calculate global thread index
@@ -27,7 +27,7 @@ void sequential(float* X, float* Y, int N) {
 }
 
 int main(int argc, char** argv) {
-    unsigned int N = 753411;
+    unsigned int N = 753411000;
     
     // { // reading the number of elements 
     //   if (argc != 2) { 
@@ -120,7 +120,7 @@ int main(int argc, char** argv) {
     // copy result from ddevice to host
     cudaMemcpy(h_out, d_out, mem_size, cudaMemcpyDeviceToHost);
 
-    {
+    { // run sequential implementation
         double elapsed; struct timeval t_start, t_end, t_diff;
         gettimeofday(&t_start, NULL);
 
