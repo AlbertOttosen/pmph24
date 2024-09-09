@@ -20,7 +20,7 @@
 --    1i32
 -- }
 -- compiled input {
---    empty(i32)
+--    empty([0]i32)
 -- }
 -- output {
 --    0i32
