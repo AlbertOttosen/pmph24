@@ -17,7 +17,13 @@
 --    [1i32]
 -- }
 -- output {
---    0i32
+--    1i32
+-- }
+-- compiled input {
+--    []i32
+-- }
+-- output {
+--    1i32
 -- }
 
 import "lssp"
