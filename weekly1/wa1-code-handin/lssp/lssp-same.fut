@@ -14,7 +14,7 @@
 --    4i32
 -- }
 -- compiled input {
---    []
+--    [1i32]
 -- }
 -- output {
 --    0i32
