@@ -1,12 +1,17 @@
 -- Parallel Longest Satisfying Segment
 --
 -- ==
--- input {
+-- compiled input {
 --    [1i32, -2i32, -2i32, 0i32, 0i32, 0i32, 0i32, 0i32, 3i32, 4i32, -6i32, 1i32]
---    [1i32, -2i32, -2i32, 0i32, 0i32, 0i32, 0i32, 3i32, 4i32, -6i32, 1i32]
 -- }
 -- output {
 --    5i32
+-- }
+-- compiled input {
+--    [1i32, -2i32, -2i32, 0i32, 0i32, 0i32, 0i32, 3i32, 4i32, -6i32, 1i32]
+-- }
+-- output {
+--    4i32
 -- }
 
 import "lssp"
