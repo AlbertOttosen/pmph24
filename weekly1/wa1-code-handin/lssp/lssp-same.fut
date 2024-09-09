@@ -13,6 +13,12 @@
 -- output {
 --    4i32
 -- }
+-- compiled input {
+--    []
+-- }
+-- output {
+--    0i32
+-- }
 
 import "lssp"
 import "lssp-seq"
