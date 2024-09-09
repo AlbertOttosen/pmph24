@@ -125,7 +125,7 @@ int main(int argc, char** argv) {
         gettimeofday(&t_start, NULL);
 
         for(int r = 0; r < GPU_RUNS; r++) {
-            sequential(h_in, seq_out, N)
+            sequential(h_in, seq_out, N);
         }
         
         gettimeofday(&t_end, NULL);
