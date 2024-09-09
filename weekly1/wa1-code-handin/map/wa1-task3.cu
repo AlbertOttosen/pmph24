@@ -27,23 +27,28 @@ void sequential(float* X, float* Y, int N) {
 }
 
 int main(int argc, char** argv) {
-    unsigned int N = 753411000;
+    unsigned int N;
     
-    // { // reading the number of elements 
-    //   if (argc != 2) { 
-    //     printf("Num Args is: %d instead of 1. Exiting!\n", argc); 
-    //     exit(1);
-    //   }
+    { // reading the number of elements 
+        if (argc == 1) {
+            N = 753411;
+        }
+        else if (argc == 2) { 
+            N = atoi(argv[1]);
+        }
+        else {   
+            printf("Num Args is: %d instead of 0 or 1. Exiting!\n", argc); 
+            exit(1);
+        }
 
-    //   N = atoi(argv[1]);
-    //   printf("N is: %d\n", N);
+        printf("N is: %d\n", N);
 
-    //   const unsigned int maxN = 500000000;
-    //   if(N > maxN) {
-    //       printf("N is too big; maximal value is %d. Exiting!\n", maxN);
-    //       exit(2);
-    //   }
-    // }
+        const unsigned int maxN = 500000000;
+        if(N > maxN) {
+            printf("N is too big; maximal value is %d. Exiting!\n", maxN);
+            exit(2);
+        }
+    }
 
     // use the first CUDA device:
     cudaSetDevice(0);
