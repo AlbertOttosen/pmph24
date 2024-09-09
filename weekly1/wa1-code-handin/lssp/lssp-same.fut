@@ -7,7 +7,6 @@
 -- }
 -- output {
 --    5i32
---    4i32
 -- }
 
 import "lssp"
