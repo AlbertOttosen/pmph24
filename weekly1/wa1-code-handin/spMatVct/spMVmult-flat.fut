@@ -126,7 +126,7 @@ let spMatVctMult [num_elms][vct_len][num_rows]
   -- TODO: fill in your implementation here.
 
   -- 1. compute flag array
-  let flags = mkFlagArray (replicate num_rows 1i32)
+  let flags = mkFlagArray mat_shp (replicate num_rows 1i32)
 
   -- 2. multiply matrix by corresponding vector elements
   let mul_mat = map (\(i,x) -> x*vct[i]) mat_val
