@@ -148,7 +148,7 @@ int main(int argc, char** argv) {
         printf("The cpu took on average %f microseconds. GB/sec: %f \n", elapsed_cpu, gigabytespersec);
     }
 
-    double speedup = elapsed_gpu / elapsed_cpu
+    double speedup = elapsed_gpu / elapsed_cpu;
 
     // print result
     //for(unsigned int i=0; i<N; ++i) printf("%.6f\n", h_out[i]);
