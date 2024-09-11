@@ -94,11 +94,12 @@ int main(int argc, char** argv) {
         myKernel<<< grid, block>>>(d_in, d_out, N);
     }
   
-    double elapsed_gpu; struct timeval t_start, t_end, t_diff;
+    double elapsed_gpu; 
     { // execute the kernel a number of times;
       // to measure performance use a large N, e.g., 200000000,
       // and increase GPU_RUNS to 100 or more. 
     
+        struct timeval t_start, t_end, t_diff;
         gettimeofday(&t_start, NULL);
 
         for(int r = 0; r < GPU_RUNS; r++) {
@@ -134,9 +135,11 @@ int main(int argc, char** argv) {
     // copy result from ddevice to host
     cudaMemcpy(h_out, d_out, mem_size, cudaMemcpyDeviceToHost);
 
-    double elapsed_cpu; struct timeval t_start, t_end, t_diff;
+    double elapsed_cpu; 
     { // run sequential implementation
       // just a single run since compiler optimizes redundant work
+        
+        struct timeval t_start, t_end, t_diff;
         gettimeofday(&t_start, NULL);
 
         sequential(h_in, seq_out, N);
