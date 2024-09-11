@@ -29,6 +29,23 @@ let sgmScan [n] 't
 let sgmSumF32 [n] (flags: [n]bool) (vals: [n]f32) : [n]f32 =
   sgmScan (+) 0f32 flags vals
 
+let mkFlagArray 't [m]
+    ( aoa_shp : [m] i64 ) ( zero : t)           -- aoa_shp =[0 ,3 ,1 ,0 ,4 ,2 ,0]
+    ( aoa_val : [m]t ) : [] t =                 -- aoa_val =[1 ,1 ,1 ,1 ,1 ,1 ,1]
+  let shp_rot = map (\i -> if i ==0 then 0      -- shp_rot =[0 ,0 ,3 ,1 ,0 ,4 ,2]
+                          else aoa_shp [i -1]
+                    ) ( iota m)
+  let shp_scn = scan (+) 0 shp_rot              -- shp_scn =[0 ,0 ,3 ,4 ,4 ,8 ,10]
+  let aoa_len = if m == 0 then 0
+                else shp_scn [m -1]+ aoa_shp [m -1] -- aoa_len = 10
+  let shp_ind = map2 (\ shp ind ->              -- shp_ind =
+                    if shp ==0 then -1          -- [ -1 ,0 ,3 , -1 ,4 ,8 , -1]
+                    else ind                    -- scatter
+                    ) aoa_shp shp_scn           -- [0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0]
+  in scatter ( replicate aoa_len zero )         -- [ -1 ,0 ,3 , -1 ,4 ,8 , -1]
+    shp_ind aoa_val                             -- [1 ,1 ,1 ,1 ,1 ,1 ,1]
+                                                -- res = [1 ,0 ,0 ,1 ,1 ,0 ,0 ,0 ,1 ,0]
+
 -----------------------------------------------------
 -- Please implement the function below, currently dummy,
 -- which is supposed to implement sparse-matrix vector
@@ -118,23 +135,6 @@ let spMatVctMult [num_elms][vct_len][num_rows]
   let shp_sc = scan (+) 0 mat_shp
   let sc_arr = sgmScan (+) 0 flags mul_mat
     in (\ ip1 -> sc_arr[ip1-1]) shp_sc
-
-let mkFlagArray 't [m]
-    ( aoa_shp : [m] i64 ) ( zero : t)           -- aoa_shp =[0 ,3 ,1 ,0 ,4 ,2 ,0]
-    ( aoa_val : [m]t ) : [] t =                 -- aoa_val =[1 ,1 ,1 ,1 ,1 ,1 ,1]
-  let shp_rot = map (\i -> if i ==0 then 0      -- shp_rot =[0 ,0 ,3 ,1 ,0 ,4 ,2]
-                          else aoa_shp [i -1]
-                    ) ( iota m)
-  let shp_scn = scan (+) 0 shp_rot              -- shp_scn =[0 ,0 ,3 ,4 ,4 ,8 ,10]
-  let aoa_len = if m == 0 then 0
-                else shp_scn [m -1]+ aoa_shp [m -1] -- aoa_len = 10
-  let shp_ind = map2 (\ shp ind ->              -- shp_ind =
-                    if shp ==0 then -1          -- [ -1 ,0 ,3 , -1 ,4 ,8 , -1]
-                    else ind                    -- scatter
-                    ) aoa_shp shp_scn           -- [0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0]
-  in scatter ( replicate aoa_len zero )         -- [ -1 ,0 ,3 , -1 ,4 ,8 , -1]
-    shp_ind aoa_val                             -- [1 ,1 ,1 ,1 ,1 ,1 ,1]
-                                                -- res = [1 ,0 ,0 ,1 ,1 ,0 ,0 ,0 ,1 ,0]
 
 -- One may run with for example:
 -- $ futhark dataset --i64-bounds=0:9999 -g [1000000]i64 --f32-bounds=-7.0:7.0 -g [1000000]f32 --i64-bounds=100:100 -g [10000]i64 --f32-bounds=-10.0:10.0 -g [10000]f32 | ./spMVmult-seq -t /dev/stderr -n
