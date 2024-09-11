@@ -37,7 +37,7 @@ let mkFlagArray 't [m]
                     ) ( iota m)
   let shp_scn = scan (+) 0 shp_rot              -- shp_scn =[0 ,0 ,3 ,4 ,4 ,8 ,10]
   let aoa_len = if m == 0 then 0
-                else shp_scn [m -1]+ aoa_shp[m -1] -- aoa_len = 10
+                else shp_scn[m -1]+ aoa_shp[m -1] -- aoa_len = 10
   let shp_ind = map2 (\shp ind ->              -- shp_ind =
                     if shp == 0 then -1          -- [ -1 ,0 ,3 , -1 ,4 ,8 , -1]
                     else ind                    -- scatter
