@@ -116,7 +116,7 @@ let spMatVctMult [num_elms][vct_len][num_rows]
 
   -- 3. sum products using flat map reduce
   let shp_sc = scan (+) 0 mat_shp
-  let sgmScan (+) 0 flags mul_mat
+  let sc_arr = sgmScan (+) 0 flags mul_mat
     in (\ ip1 -> sc_arr[ip1-1]) shp_sc
 
 let mkFlagArray 't [m]
