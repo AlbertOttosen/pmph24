@@ -135,7 +135,7 @@ let spMatVctMult [num_elms][vct_len][num_rows]
   -- 3. sum products using flat map reduce
   let shp_sc = scan (+) 0 mat_shp
   let sc_arr = sgmScan (+) 0 flags mul_mat
-  let res = (\ip1 -> sc_arr[ip1-1i32]) shp_sc
+  let res = map (\ip1 -> sc_arr[ip1-1]) shp_sc
     in res
 
 -- One may run with for example:
