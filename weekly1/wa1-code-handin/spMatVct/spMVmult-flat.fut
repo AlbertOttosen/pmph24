@@ -135,7 +135,8 @@ let spMatVctMult [num_elms][vct_len][num_rows]
   -- 3. sum products using flat map reduce
   let shp_sc = scan (+) 0 mat_shp
   let sc_arr = sgmScan (+) 0 flags mul_mat
-    in (\ip1 -> sc_arr[ip1-1]) shp_sc
+  let res = (\ip1 -> sc_arr[ip1-1]) shp_sc
+    in res
 
 -- One may run with for example:
 -- $ futhark dataset --i64-bounds=0:9999 -g [1000000]i64 --f32-bounds=-7.0:7.0 -g [1000000]f32 --i64-bounds=100:100 -g [10000]i64 --f32-bounds=-10.0:10.0 -g [10000]f32 | ./spMVmult-seq -t /dev/stderr -n
