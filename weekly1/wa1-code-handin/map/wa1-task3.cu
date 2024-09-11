@@ -151,11 +151,11 @@ int main(int argc, char** argv) {
         printf("The cpu took on average %f microseconds. GB/sec: %f \n", elapsed_cpu, gigabytespersec);
     }
 
-    double speedup = elapsed_gpu / elapsed_cpu;
+    double speedup = elapsed_cpu / elapsed_gpu;
 
     // print result
     //for(unsigned int i=0; i<N; ++i) printf("%.6f\n", h_out[i]);
-    printf("Speedup = %f microseconds / %f microseconds = %f \n", elapsed_gpu, elapsed_cpu, speedup);
+    printf("Speedup = %f microseconds / %f microseconds = %f \n", elapsed_cpu, elapsed_gpu, speedup);
 
     for(unsigned int i=0; i<N; ++i) {
         float actual   = h_out[i];
