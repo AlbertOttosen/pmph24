@@ -127,7 +127,6 @@ let spMatVctMult [num_elms][vct_len][num_rows]
 
   -- 1. compute flag array
   let flags: [num_elms]bool = (mkFlagArray mat_shp false (replicate num_rows true)) :> [num_elms]bool
-  --let flags: [num_elms]bool = map (\i -> i != 0) flags_i32
 
   -- 2. multiply matrix by corresponding vector elements
   let mul_mat = map (\(i,x) -> x*vct[i]) mat_val
@@ -135,8 +134,7 @@ let spMatVctMult [num_elms][vct_len][num_rows]
   -- 3. sum products using flat map reduce
   let shp_sc = scan (+) 0 mat_shp
   let sc_arr = sgmScan (+) 0 flags mul_mat
-  let res = map (\ip1 -> sc_arr[ip1-1]) shp_sc
-    in res
+    in map (\ip1 -> sc_arr[ip1-1]) shp_sc
 
 -- One may run with for example:
 -- $ futhark dataset --i64-bounds=0:9999 -g [1000000]i64 --f32-bounds=-7.0:7.0 -g [1000000]f32 --i64-bounds=100:100 -g [10000]i64 --f32-bounds=-10.0:10.0 -g [10000]f32 | ./spMVmult-seq -t /dev/stderr -n
