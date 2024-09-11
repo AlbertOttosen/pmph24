@@ -94,11 +94,11 @@ int main(int argc, char** argv) {
         myKernel<<< grid, block>>>(d_in, d_out, N);
     }
   
+    double elapsed_gpu; struct timeval t_start, t_end, t_diff;
     { // execute the kernel a number of times;
       // to measure performance use a large N, e.g., 200000000,
       // and increase GPU_RUNS to 100 or more. 
     
-        double elapsed; struct timeval t_start, t_end, t_diff;
         gettimeofday(&t_start, NULL);
 
         for(int r = 0; r < GPU_RUNS; r++) {
@@ -122,9 +122,9 @@ int main(int argc, char** argv) {
         
         gettimeofday(&t_end, NULL);
         timeval_subtract(&t_diff, &t_end, &t_start);
-        elapsed = (1.0 * (t_diff.tv_sec*1e6+t_diff.tv_usec)) / GPU_RUNS;
-        double gigabytespersec = (2.0 * N * 4.0) / (elapsed * 1000.0);
-        printf("The kernel took on average %f microseconds. GB/sec: %f \n", elapsed, gigabytespersec);
+        elapsed_gpu = (1.0 * (t_diff.tv_sec*1e6+t_diff.tv_usec)) / GPU_RUNS;
+        double gigabytespersec = (2.0 * N * 4.0) / (elapsed_gpu * 1000.0);
+        printf("The kernel took on average %f microseconds. GB/sec: %f \n", elapsed_gpu, gigabytespersec);
         
     }
         
@@ -134,35 +134,35 @@ int main(int argc, char** argv) {
     // copy result from ddevice to host
     cudaMemcpy(h_out, d_out, mem_size, cudaMemcpyDeviceToHost);
 
+    double elapsed_cpu; struct timeval t_start, t_end, t_diff;
     { // run sequential implementation
       // just a single run since compiler optimizes redundant work
-        double elapsed; struct timeval t_start, t_end, t_diff;
         gettimeofday(&t_start, NULL);
 
         sequential(h_in, seq_out, N);
         
         gettimeofday(&t_end, NULL);
         timeval_subtract(&t_diff, &t_end, &t_start);
-        elapsed = (1.0 * (t_diff.tv_sec*1e6+t_diff.tv_usec));
-        double gigabytespersec = (2.0 * N * 4.0) / (elapsed * 1000.0);
-        printf("The cpu took on average %f microseconds. GB/sec: %f \n", elapsed, gigabytespersec);
+        elapsed_cpu = (1.0 * (t_diff.tv_sec*1e6+t_diff.tv_usec));
+        double gigabytespersec = (2.0 * N * 4.0) / (elapsed_cpu * 1000.0);
+        printf("The cpu took on average %f microseconds. GB/sec: %f \n", elapsed_cpu, gigabytespersec);
     }
+
+    double speedup = elapsed_gpu / elapsed_cpu
 
     // print result
     //for(unsigned int i=0; i<N; ++i) printf("%.6f\n", h_out[i]);
+    printf("Speedup = %f microseconds / %f microseconds = %f \n", elapsed_gpu, elapsed_cpu, speedup);
 
     for(unsigned int i=0; i<N; ++i) {
         float actual   = h_out[i];
         float expected = pow(h_in[i] / (h_in[i] - 2.3), 3); 
         if( actual != expected ) {
-            printf("Invalid result at index %d, actual: %f, expected: %f. \n", i, actual, expected);
+            printf("INVALID result at index %d, actual: %f, expected: %f. \n", i, actual, expected);
             exit(3);
         }
-        // else {
-        //     printf("Valid result at index %d, actual: %f, expected: %f. \n", i, actual, expected);
-        // }
     }
-    printf("Successful Validation.\n");
+    printf("VALID\n");
 
     // clean-up memory
     free(h_in);       free(h_out);
