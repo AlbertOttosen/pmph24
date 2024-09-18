@@ -21,13 +21,8 @@ mkFlags(int mat_rows, int* mat_shp_sc_d, char* flags_d) {
     // Check if gid is within array bounds
     if (gid >= mat_rows) return;
 
-    // Fill array with 0
-    flags_d[gid] = 0;
-
-    // Set the flags where mat_shp_sc_d is non-negative
-    if (mat_shp_sc_d[gid] != -1) {
-        flags_d[mat_shp_sc_d[gid]] = 1;
-    }
+    // Set the flags based on mat_shp_sc_d
+    flags_d[mat_shp_sc_d[gid]] = 1;
 }
 
 __global__ void
@@ -52,7 +47,7 @@ select_last_in_sgm(int mat_rows, int* mat_shp_sc_d, float* tmp_scan, float* res_
     
     // Get index of last value in segment
     int end_of_segment = mat_shp_sc_d[gid];
-    
+
     // Get the result of the segmented scan at that index
     res_vct_d[gid] = tmp_scan[end_of_segment-1];
 }
