@@ -10,23 +10,23 @@ replicate0(int tot_size, char* flags_d) {
     if (gid >= tot_size) return;
 
     // Fill array with 0
-    flags_d[idx] = 0;
+    flags_d[gid] = 0;
 }
 
 __global__ void
 mkFlags(int mat_rows, int* mat_shp_sc_d, char* flags_d) {
     // Get the global thread index
-    int idx = blockIdx.x * blockDim.x + threadIdx.x;
+    int gid = blockIdx.x * blockDim.x + threadIdx.x;
 
     // Check if gid is within array bounds
-    if (idx >= mat_rows) return;
+    if (gid >= mat_rows) return;
 
     // Fill array with 0
-    flags_d[idx] = 0;
+    flags_d[gid] = 0;
 
     // Set the flags where mat_shp_sc_d is non-negative
-    if (mat_shp_sc_d[idx] != -1) {
-        flags_d[mat_shp_sc_d[idx]] = 1;
+    if (mat_shp_sc_d[gid] != -1) {
+        flags_d[mat_shp_sc_d[gid]] = 1;
     }
 }
 
