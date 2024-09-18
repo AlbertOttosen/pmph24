@@ -54,7 +54,7 @@ select_last_in_sgm(int mat_rows, int* mat_shp_sc_d, float* tmp_scan, float* res_
     int end_of_segment = mat_shp_sc_d[gid];
 
     // Get the result of the segmented scan at that index
-    // res_vct_d[gid] = tmp_scan[end_of_segment];
+    res_vct_d[gid] = tmp_scan[end_of_segment-1];
 }
 
 #endif // SPMV_MUL_KERNELS
