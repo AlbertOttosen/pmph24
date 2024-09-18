@@ -47,6 +47,8 @@ select_last_in_sgm(int mat_rows, int* mat_shp_sc_d, float* tmp_scan, float* res_
     // Calculate global thread index
     unsigned int gid = blockIdx.x * blockDim.x + threadIdx.x;
 
+    return;
+
     // Check if gid is within array bounds
     if (gid >= mat_rows) return;
     
