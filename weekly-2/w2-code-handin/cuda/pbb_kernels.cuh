@@ -195,10 +195,7 @@ scanIncWarp( volatile typename OP::RedElTp* ptr, const unsigned int idx ) {
     // 8.   endfor
     // 9. endfor
     for(int d=0; d<lgWARP; d++) {
-        const unsigned int h = 1 << d; //2^d    
-        // for(int i=h+1; i<WARP; i++) {
-        //     ptr[idx+i] = OP::apply(ptr[idx+i-h], ptr[idx+i]);
-        // }
+        const unsigned int h = 1 << d; //2^d
         if (idx>=h) {
             ptr[idx] = OP::apply(ptr[idx-h], ptr[idx]);
         }
@@ -235,12 +232,13 @@ scanIncBlock(volatile typename OP::RedElTp* ptr, const unsigned int idx) {
     //   the first warp. This works because
     //   warp size = 32, and
     //   max block size = 32^2 = 1024
+    //if (lane == (WARP-1)) { ptr[warpid] = OP::remVolatile(ptr[idx]); }
     if (lane == (WARP-1)) { ptr[warpid] = res; }
     __syncthreads();
 
     // 2. if last thread in a warp, record it at the beginning of sh_data
-    // if ( lane == (WARP-1) ) { flg[warpid] = res.f; ptr[warpid] = res.v; }
-    // __syncthreads();
+    if ( lane == (WARP-1) ) { flg[warpid] = res.f; ptr[warpid] = res.v; }
+    __syncthreads();
 
     // 3. scan again the first warp.
     if (warpid == 0) scanIncWarp<OP>(ptr, idx);
