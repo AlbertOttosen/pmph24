@@ -236,10 +236,6 @@ scanIncBlock(volatile typename OP::RedElTp* ptr, const unsigned int idx) {
     //if (lane == (WARP-1)) { ptr[warpid] = res; }
     __syncthreads();
 
-    // 2. if last thread in a warp, record it at the beginning of sh_data
-    if ( lane == (WARP-1) ) { flg[warpid] = res.f; ptr[warpid] = res.v; }
-    __syncthreads();
-
     // 3. scan again the first warp.
     if (warpid == 0) scanIncWarp<OP>(ptr, idx);
     __syncthreads();
