@@ -179,7 +179,7 @@ class Mssp {
 template<class OP>
 __device__ inline typename OP::RedElTp
 scanIncWarp( volatile typename OP::RedElTp* ptr, const unsigned int idx ) {
-    // const unsigned int lane = idx & (WARP-1);
+    const unsigned int lane = idx & (WARP-1);
     
     // if(lane==0) {
     //     #pragma unroll
@@ -196,7 +196,7 @@ scanIncWarp( volatile typename OP::RedElTp* ptr, const unsigned int idx ) {
     // 9. endfor
     for(int d=0; d<lgWARP; d++) {
         const unsigned int h = 1 << d; //2^d
-        if (idx>=h) {
+        if (lane>=h) {
             ptr[idx] = OP::apply(ptr[idx-h], ptr[idx]);
         }
     }
