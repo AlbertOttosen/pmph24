@@ -179,14 +179,14 @@ class Mssp {
 template<class OP>
 __device__ inline typename OP::RedElTp
 scanIncWarp( volatile typename OP::RedElTp* ptr, const unsigned int idx ) {
-    // const unsigned int lane = idx & (WARP-1);
+    const unsigned int lane = idx & (WARP-1);
     
-    // if(lane==0) {
-    //     #pragma unroll
-    //     for(int i=1; i<WARP; i++) {
-    //         ptr[idx+i] = OP::apply(ptr[idx+i-1], ptr[idx+i]);
-    //     }
-    // }
+    if(lane==0) {
+        #pragma unroll
+        for(int i=1; i<WARP; i++) {
+            ptr[idx+i] = OP::apply(ptr[idx+i-1], ptr[idx+i]);
+        }
+    }
 
     // 4. for d = 0 to k-1 do
     // 5.   h = 2d
@@ -194,12 +194,12 @@ scanIncWarp( volatile typename OP::RedElTp* ptr, const unsigned int idx ) {
     // 7.     B[i] ← B[i-h] ⊕ B[i]
     // 8.   endfor
     // 9. endfor
-    for(int d=0; d<lgWARP; d++) {
-        const unsigned int h = 1 << d; //2^d    
-        for(int i=h; i<WARP; i++) {
-            ptr[idx+i] = OP::apply(ptr[idx+i-h], ptr[idx+i]);
-        }
-    }
+    // for(int d=0; d<lgWARP; d++) {
+    //     const unsigned int h = 1 << d; //2^d    
+    //     for(int i=h; i<WARP; i++) {
+    //         ptr[idx+i] = OP::apply(ptr[idx+i-h], ptr[idx+i]);
+    //     }
+    // }
 
     return OP::remVolatile(ptr[idx]);
 }
