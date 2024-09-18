@@ -195,7 +195,7 @@ scanIncWarp( volatile typename OP::RedElTp* ptr, const unsigned int idx ) {
     // 8.   endfor
     // 9. endfor
     for(int d=0; d<lgWARP; d++) {
-        h = 1 << d //2^d    
+        h = 1 << d; //2^d    
         for(int i=h; i<WARP; i++) {
             ptr[idx+i] = OP::apply(ptr[idx+i-h], ptr[idx+i]);
         }
