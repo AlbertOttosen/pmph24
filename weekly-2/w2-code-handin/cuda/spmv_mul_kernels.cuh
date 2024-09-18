@@ -39,8 +39,7 @@ mult_pairs(int* mat_inds, float* mat_vals, float* vct, int tot_size, float* tmp_
     if (gid >= tot_size) return;
 
     //let mul_mat = map (\(i,x) -> x*vct[i]) mat_val
-    tmp_pairs[gid] = mat_vals[gid] * vct[mat_inds[gid]]
-
+    tmp_pairs[gid] = mat_vals[gid] * vct[mat_inds[gid]];
 }
 
 __global__ void
