@@ -12,7 +12,7 @@
 #define RUNS_GPU            100
 #define RUNS_CPU            5
 #define NUM_BLOCKS_SCAN     1024
-#define ELEMS_PER_THREAD    24
+#define ELEMS_PER_THREAD    6
 
 typedef unsigned int uint32_t;
 typedef int           int32_t;
