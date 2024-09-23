@@ -79,7 +79,7 @@ let primesFlat (n : i64) : []i64 =
       let ( flag_n , flag_v ) = zip mult_lens sq_primes |> mkFlagArray mult_lens (0 ,0) |> unzip
       let flag_n_bool = map (\f -> f != 0) flag_n
       let rp = sgmScanIncl (+) 0 flag_n_bool flag_v
-      let not_primes = map (\(j,p) -> j*p) (twom_flat :> [flat_size]i64) (rp :> [flat_size]i64) -- F rule 2
+      let not_primes = map2 (\(j,p) -> j*p) ((twom_flat :> [flat_size]i64) (rp :> [flat_size]i64)) -- F rule 2
 
       -- If not_primes is correctly computed, then the remaining
       -- code is correct and will do the job of computing the prime
