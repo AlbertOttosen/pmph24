@@ -181,12 +181,12 @@ __device__ inline typename OP::RedElTp
 scanIncWarp( volatile typename OP::RedElTp* ptr, const unsigned int idx ) {
     const unsigned int lane = idx & (WARP-1);
     
-    if(lane==0) {
-        #pragma unroll
-        for(int i=1; i<WARP; i++) {
-            ptr[idx+i] = OP::apply(ptr[idx+i-1], ptr[idx+i]);
-        }
-    }
+    // if(lane==0) {
+    //     #pragma unroll
+    //     for(int i=1; i<WARP; i++) {
+    //         ptr[idx+i] = OP::apply(ptr[idx+i-1], ptr[idx+i]);
+    //     }
+    // }
 
     // 4. for d = 0 to k-1 do
     // 5.   h = 2^d
@@ -194,12 +194,12 @@ scanIncWarp( volatile typename OP::RedElTp* ptr, const unsigned int idx ) {
     // 7.     B[i] ← B[i-h] ⊕ B[i]
     // 8.   endfor
     // 9. endfor
-    // for(int d=0; d<lgWARP; d++) {
-    //     const unsigned int h = 1 << d; //2^d
-    //     if (lane>=h) {
-    //         ptr[idx] = OP::apply(ptr[idx-h], ptr[idx]);
-    //     }
-    // }
+    for(int d=0; d<lgWARP; d++) {
+        const unsigned int h = 1 << d; //2^d
+        if (lane>=h) {
+            ptr[idx] = OP::apply(ptr[idx-h], ptr[idx]);
+        }
+    }
 
     return OP::remVolatile(ptr[idx]);
 }
