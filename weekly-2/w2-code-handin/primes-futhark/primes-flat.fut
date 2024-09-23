@@ -5,6 +5,35 @@
 
 -- output @ ref10000000.out
 
+let mkFlagArray 't [m] 
+            (aoa_shp: [m]i64) (zero: t)  
+            (aoa_val: [m]t  ) : []t   = 
+  let shp_rot = map (\i->if i==0 then 0  
+                         else aoa_shp[i-1]
+                    ) (iota m)
+  let shp_scn = scan (+) 0 shp_rot      
+  let aoa_len = if m == 0 then 0         
+                else shp_scn[m-1]+aoa_shp[m-1]
+  let shp_ind = map2 (\shp ind ->      
+                       if shp==0 then -1
+                       else ind        
+                     ) aoa_shp shp_scn 
+  in scatter (replicate aoa_len zero) 
+             shp_ind aoa_val             
+
+let sgmScanIncl [n] 't
+            (op: t -> t -> t)
+            (ne: t)
+            (flags: [n]bool)
+            (vals: [n]t)
+            : [n]t =
+  scan (\(f1, v1) (f2, v2) -> (f1 || f2, if f2 then v2 else op v1 v2))
+       (false, ne)
+       (zip flags vals)
+  |> unzip
+  |> (.1)
+
+
 let primesFlat (n : i64) : []i64 =
   let sq_primes   = [2i64, 3i64, 5i64, 7i64]
   let len  = 8i64
@@ -37,7 +66,21 @@ let primesFlat (n : i64) : []i64 =
       -- Also note that `not_primes` has flat length equal to `flat_size`
       --  and the shape of `composite` is `mult_lens`. 
       
-      let not_primes = replicate flat_size 0
+      --let not_primes = replicate flat_size 0
+
+      --let iot = iota mm1 -- F rule 4
+      let flag = mkFlagArray mult_lens 0 mult_lens
+      let flag_bool = map (\f -> f != 0) flag
+      let vals = map (\f -> if f != 0 then 0 else 1) flag
+      let iot_flat = sgmScanIncl (+) 0 flag_bool vals
+
+      --let twom = map (+2) iot -- F rule 2
+      let twom_flat = map (+2) iot_flat -- F rule 2
+      --let rp = replicate mm1 p -- F rule 3
+      let ( flag_n , flag_v ) = zip mult_lens sq_primes |> mkFlagArray mult_lens (0 ,0) |> unzip
+      let rp = sgmScanIncl (+) 0 flag_n flag_v
+
+      let not_primes = map2 (\(j,p) -> j*p) (twom_flat :> [flat_size]i64) (rp :> [flat_size]i64) -- F rule 2
 
       -- If not_primes is correctly computed, then the remaining
       -- code is correct and will do the job of computing the prime
