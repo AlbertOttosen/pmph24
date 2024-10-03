@@ -27,7 +27,7 @@ void goldenSeq(ElTp* A, ElTp* B, const uint32_t num_rows, const uint32_t num_col
     //         B[ii + j] = accum;
     //     }
     // }
-    #pragma omp parallel for private(accum, a_el) // is this correct privatization?
+    #pragma omp parallel for // is this correct privatization?
     for(uint64_t i = 0; i < num_rows; i++) {
         uint64_t ii = i*num_cols;
         ElTp accum = 0.0;
