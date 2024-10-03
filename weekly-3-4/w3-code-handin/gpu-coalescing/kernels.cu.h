@@ -100,9 +100,9 @@ transKernel(ElTp* A_tr, ElTp* B_tr, uint32_t num_rows, uint32_t num_cols) {
 
     ElTp accum = 0;
     for(int j=0; j<num_cols; j++) {
-        ElTp el_a  = A[ gid*num_cols + j ];
+        ElTp el_a  = A_tr[ gid*num_cols + j ];
         accum = sqrt(accum) + el_a * el_a;
-        B[ gid*num_cols + j ] = accum;
+        B_tr[ gid*num_cols + j ] = accum;
     }
 }
 
