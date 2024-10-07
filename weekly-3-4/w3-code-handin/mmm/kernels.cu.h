@@ -98,6 +98,22 @@ __global__ void mmmSymBlkRegInnSeqKer(ElTp* A, ElTp* B, ElTp* C, int heightA, in
        **************************************************************/
       
        // Please implement Task 3.1.1 here
+      // Loop over the Ry subblocks
+      for (int i = 0; i < Ry; i++) {
+          // Calculate the global row index for A (for this thread)
+          unsigned int rowA = iii + threadIdx.y + i * Ty;
+          // Calculate the global column index for A (for this thread)
+          unsigned int colA = kk + threadIdx.x;
+
+          // Check if the row and column indices are within bounds of A
+          if (rowA < heightA && colA < widthA) {
+              // Coalesced read: each thread accesses a unique element in A
+              Aloc[threadIdx.y + i * Ty][threadIdx.x] = A[rowA * widthA + colA];
+          } else {
+              // If out of bounds, set to 0
+              Aloc[threadIdx.y + i * Ty][threadIdx.x] = 0.0;
+          }
+      }
 
       /***************************************
        * Subtask 3.1.2:
@@ -127,6 +143,22 @@ __global__ void mmmSymBlkRegInnSeqKer(ElTp* A, ElTp* B, ElTp* C, int heightA, in
        **************************************************************/
 
       // Please implement Task 3.1.2 here
+      // Loop over the Rx subblocks
+      for (int j = 0; j < Rx; j++) {
+          // Calculate the global row index for B (for this thread)
+          unsigned int rowB = kk + threadIdx.y;  // Since Tk = Ty
+          // Calculate the global column index for B (for this thread)
+          unsigned int colB = jjj + threadIdx.x + j * Tx;
+
+          // Check if the row and column indices are within bounds of B
+          if (rowB < widthA && colB < widthB) {
+              // Coalesced read: each thread accesses a unique element in B
+              Bloc[threadIdx.y][threadIdx.x + j * Tx] = B[rowB * widthB + colB];
+          } else {
+              // If out of bounds, set to 0
+              Bloc[threadIdx.y][threadIdx.x + j * Tx] = 0.0;
+          }
+      }
 
       __syncthreads();
 
