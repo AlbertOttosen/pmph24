@@ -106,7 +106,7 @@ void bmmmTiledKer ( ElTp* A,      ElTp* B, char* X_tr,   ElTp* Y
       ElTp ab = A[j1 * N + q] * B[q * K + j2];
 
       // Load X_tr into shared memory (only for threads within bounds)
-      int i_flat = i + flat_thid
+      int i_flat = i + flat_thid;
       char x = (flat_thid < T && i_flat < M) ? X_tr[q * M + i_flat] : 0; // Bounds check
       Xsh_tr[flat_thid] = x;
 
