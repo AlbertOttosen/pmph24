@@ -83,6 +83,7 @@ void bmmmTiledKer ( ElTp* A,      ElTp* B, char* X_tr,   ElTp* Y
   const int ii  = blockIdx.x;
   const int j1  = threadIdx.y;
   const int j2  = threadIdx.x;
+  const int i   = ii * T;
   const int flat_thid = threadIdx.y * K + threadIdx.x;
 
   #pragma unroll
@@ -105,7 +106,7 @@ void bmmmTiledKer ( ElTp* A,      ElTp* B, char* X_tr,   ElTp* Y
       ElTp ab = A[j1 * N + q] * B[q * K + j2];
 
       // Load X_tr into shared memory (only for threads within bounds)
-      const int i   = ii * T + flat_thid;
+      //int i   = ii * T + flat_thid;
       char x = (flat_thid < T && i < M) ? X_tr[q * M + i] : 0; // Bounds check
       if (flat_thid < T && i < M) {
         Xsh_tr[flat_thid] = x;
