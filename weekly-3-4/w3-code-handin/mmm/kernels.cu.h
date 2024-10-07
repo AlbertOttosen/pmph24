@@ -101,7 +101,7 @@ __global__ void mmmSymBlkRegInnSeqKer(ElTp* A, ElTp* B, ElTp* C, int heightA, in
       // Loop over the Ry subblocks
       for (int i = 0; i < Ry; i++) {
           // Calculate the global row index for A (for this thread)
-          unsigned int rowA = iii + threadIdx.y + i * Ty;
+          unsigned int rowA = iii + i * Ty + threadIdx.y;
           // Calculate the global column index for A (for this thread)
           unsigned int colA = kk + threadIdx.x;
 
@@ -148,7 +148,7 @@ __global__ void mmmSymBlkRegInnSeqKer(ElTp* A, ElTp* B, ElTp* C, int heightA, in
           // Calculate the global row index for B (for this thread)
           unsigned int rowB = kk + threadIdx.y;  // Since Tk = Ty
           // Calculate the global column index for B (for this thread)
-          unsigned int colB = jjj + threadIdx.x + j * Tx;
+          unsigned int colB = jjj + j * Tx + threadIdx.x;
 
           // Check if the row and column indices are within bounds of B
           if (rowB < widthA && colB < widthB) {
