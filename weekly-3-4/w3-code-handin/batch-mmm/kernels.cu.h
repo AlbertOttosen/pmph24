@@ -100,5 +100,37 @@ void bmmmTiledKer ( ElTp* A,      ElTp* B, char* X_tr,   ElTp* Y
    * hold in global memory, i.e., A, B, X_tr, Y.
    ***********************************************/
 
+  // Iterate over each element in the inner dimension of A and B (i.e., q)
+  for (int q = 0; q < N; q++) {
+      // Perform the matrix multiplication between A and B
+      ElTp ab = A[j1 * N + q] * B[q * K + j2];
+
+      // Load X_tr into shared memory (only for threads within bounds)
+      int i = ii + flat_thid; // Calculate the global index of X_tr
+      char x = (flat_thid < T && i < M) ? X_tr[q * M + i] : 0; // Bounds check
+      Xsh_tr[flat_thid] = x;
+
+      // Synchronize to ensure all threads have loaded their part of X_tr
+      __syncthreads();
+
+      // Accumulate the results using the value of X_tr in shared memory
+      #pragma unroll
+      for (int ir = 0; ir < T; ir++) {
+          // Only accumulate if the value of X_tr is non-zero
+          ElTp v = (Xsh_tr[ir] != 0) ? 1.0 : 0.0;
+          acc[ir] += ab * v;
+      }
+
+      // Synchronize again before loading the next portion of X_tr
+      __syncthreads();
+  }
+
+  // Store the accumulated result back into global memory
+  #pragma unroll
+  for (int ir = 0; ir < T; ir++) {
+      if (ii + ir < M) {
+          Y[(ii + ir) * K * K + j1 * K + j2] = acc[ir];
+      }
+  }
 }
 #endif

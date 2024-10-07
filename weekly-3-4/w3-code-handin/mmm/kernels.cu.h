@@ -105,12 +105,11 @@ __global__ void mmmSymBlkRegInnSeqKer(ElTp* A, ElTp* B, ElTp* C, int heightA, in
           // Calculate the global column index for A (for this thread)
           unsigned int colA = kk + threadIdx.x;
 
-          // Check if the row and column indices are within bounds of A
+          // Bounds check
           if (rowA < heightA && colA < widthA) {
               // Coalesced read: each thread accesses a unique element in A
               Aloc[threadIdx.y + i * Ty][threadIdx.x] = A[rowA * widthA + colA];
           } else {
-              // If out of bounds, set to 0
               Aloc[threadIdx.y + i * Ty][threadIdx.x] = 0.0;
           }
       }
@@ -150,12 +149,11 @@ __global__ void mmmSymBlkRegInnSeqKer(ElTp* A, ElTp* B, ElTp* C, int heightA, in
           // Calculate the global column index for B (for this thread)
           unsigned int colB = jjj + j * Tx + threadIdx.x;
 
-          // Check if the row and column indices are within bounds of B
+          // Bounds check
           if (rowB < widthA && colB < widthB) {
               // Coalesced read: each thread accesses a unique element in B
               Bloc[threadIdx.y][threadIdx.x + j * Tx] = B[rowB * widthB + colB];
           } else {
-              // If out of bounds, set to 0
               Bloc[threadIdx.y][threadIdx.x + j * Tx] = 0.0;
           }
       }
