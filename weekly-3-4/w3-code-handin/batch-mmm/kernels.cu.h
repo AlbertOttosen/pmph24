@@ -107,7 +107,9 @@ void bmmmTiledKer ( ElTp* A,      ElTp* B, char* X_tr,   ElTp* Y
       // Load X_tr into shared memory (only for threads within bounds)
       const int i   = ii + flat_thid;
       char x = (flat_thid < T && i < M) ? X_tr[q * M + i] : 0; // Bounds check
-      Xsh_tr[flat_thid] = x;
+      if (flat_thid < T) {
+        Xsh_tr[flat_thid] = x;
+      }
 
       // Synchronize to ensure all threads have loaded their part of X_tr
       __syncthreads();
