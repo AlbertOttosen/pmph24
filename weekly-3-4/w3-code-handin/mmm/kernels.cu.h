@@ -99,19 +99,19 @@ __global__ void mmmSymBlkRegInnSeqKer(ElTp* A, ElTp* B, ElTp* C, int heightA, in
       
        // Please implement Task 3.1.1 here
       // Loop over the Ry subblocks
-      for (int i = 0; i < Ry; i++) {
+      for (int i = 0; i < Ty; i++) {
           // Calculate the global row index for A (for this thread)
-          unsigned int rowA = iii + i * Ty + threadIdx.y;
+          unsigned int rowA = iii + i * Ry + threadIdx.y;
           // Calculate the global column index for A (for this thread)
           unsigned int colA = kk + threadIdx.x;
 
           // Check if the row and column indices are within bounds of A
           if (rowA < heightA && colA < widthA) {
               // Coalesced read: each thread accesses a unique element in A
-              Aloc[threadIdx.y + i * Ty][threadIdx.x] = A[rowA * widthA + colA];
+              Aloc[threadIdx.y + i * Ry][threadIdx.x] = A[rowA * widthA + colA];
           } else {
               // If out of bounds, set to 0
-              Aloc[threadIdx.y + i * Ty][threadIdx.x] = 0.0;
+              Aloc[threadIdx.y + i * Ry][threadIdx.x] = 0.0;
           }
       }
 
