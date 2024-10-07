@@ -42,7 +42,7 @@ multiStepKernel ( uint32_t* inp_inds
          * within the bounds of the current chunk
          * (less than UB and greater or equal to LB.)
          ************************/
-        //int H = UB;
+        int H = UB;
         if(ind < H) {
         //if(LB < ind && ind < UB) {
             float val = inp_vals[gid];
